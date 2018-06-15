@@ -1,0 +1,25 @@
+{ "token"  : "NDQ0MjM1OTkxMTI1OTgzMjQz.DdY-oA.xzFttkToN66xFGJTTobLD9vVM9w",
+  "prefix" : "!cake",
+  "cmd":{
+    "show_birthdays":"bdays",
+    "save_birthday":"save",
+    "remove_birthday":"remove",
+    "message":"message",
+    "show_events":"events",
+    "show_server_events":"server_events",
+    "save_event":"save_event",
+    "remove_event":"remove_event",
+    "activate_events":"trigger_events",
+    "help":"help"
+  },
+  "db":{
+    "host":"localhost",
+    "user":"root",
+    "pass":"",
+    "database":"bday"
+  },
+  "other":{
+    "url":"https://discord.js.org/#/docs/main/indev/class/RichEmbed",
+    "thumb":"http://i.imgur.com/p2qNFag.png"
+  }
+}
