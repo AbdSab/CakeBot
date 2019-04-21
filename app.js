@@ -60,10 +60,10 @@ client.on("ready", () => {
 
 	//In case of shutdown and bot added to a server, save that server:
 	client.guilds.forEach(function(gld){
-		con.query(`INSERT IGNORE INTO server(id, message) VALUES('${gld.id}', 'Happy Birthday to :')`, function (err, rows) {
+		con.query(`INSERT IGNORE INTO server(id, message) VALUES("${gld.id}", 'Happy Birthday to :')`, function (err, rows) {
 			if (err) throw err;
 		});
-		con.query(`INSERT IGNORE INTO data_server(id, name, joined) VALUES('${gld.id}', '${gld.name}', CURDATE())`, function (err, rows) {
+		con.query(`INSERT IGNORE INTO data_server(id, name, joined) VALUES("${gld.id}", "${gld.name}", CURDATE())`, function (err, rows) {
 			if (err) throw err;
 		});
 	});
@@ -170,11 +170,11 @@ client.on('guildCreate', guild => {
 		.catch(console.error);
 	
   
-	con.query(`INSERT IGNORE INTO server(id, message) VALUES('${guild.id}', 'Happy Birthday to :')`, function (err, rows) {
+	con.query(`INSERT IGNORE INTO server(id, message) VALUES("${guild.id}", 'Happy Birthday to :')`, function (err, rows) {
 		if (err) throw err;
 	});
 
-	con.query(`INSERT IGNORE INTO data_server(id, name, joined) VALUES('${guild.id}', '${guild.name}', CURDATE())`, function (err, rows) {
+	con.query(`INSERT IGNORE INTO data_server(id, name, joined) VALUES("${guild.id}", "${guild.name}", CURDATE())`, function (err, rows) {
 		if (err) throw err;
 	});
 
@@ -192,7 +192,7 @@ client.on('guildCreate', guild => {
 				con.query(`SELECT * FROM bday WHERE id_server = ${guild.id} AND id_user = ${row.id}`, function (err, zx) {
 					if(err) throw err;
 					if(zx.length < 1){
-						con.query(`INSERT INTO bday(id_user, id_server) VALUES('${row.id}', '${guild.id}')`, function (err) {
+						con.query(`INSERT INTO bday(id_user, id_server) VALUES("${row.id}", "${guild.id}")`, function (err) {
 							if (err) throw err;
 							console.log("Saved bday");
 						});
@@ -217,10 +217,10 @@ client.on('guildMemberAdd',member => {
 			}
 		})
 		console.log(member.guild.id);
-		con.query(`SELECT id FROM user WHERE id='${member.id}'`, function (err, rows) {
+		con.query(`SELECT id FROM user WHERE id="${member.id}"`, function (err, rows) {
 			if (err) throw err;
 			if(rows.length >= 1){
-				con.query(`INSERT INTO bday VALUES('${member.id}', '${member.guild.id}')`, function (err, b) {
+				con.query(`INSERT INTO bday VALUES("${member.id}", "${member.guild.id}")`, function (err, b) {
 					if (err) throw err;
 				});
 			}
@@ -246,7 +246,7 @@ client.on('guildMemberRemove',member => {
 				}
 			}
 		})
-		con.query(`DELETE FROM bday WHERE id_user='${member.id}' AND id_server='${member.guild.id}'`, function (err, rows) {
+		con.query(`DELETE FROM bday WHERE id_user="${member.id}" AND id_server="${member.guild.id}"`, function (err, rows) {
 			if (err) throw err;
 			defaultChannel.send(`Goodbye <@${member.id}> We will miss you !`);
 		});
@@ -264,21 +264,21 @@ client.on("message", async message => {
   //Save bday------------------
   if(command === config.cmd.save_birthday){
 		if (/^([12]\d{3}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01]))$/.test(args[0])){
-			con.query(`SELECT id FROM user WHERE id='${message.author.id}'`, function (err, rows) {
+			con.query(`SELECT id FROM user WHERE id="${message.author.id}"`, function (err, rows) {
 				console.log(message.author.id)
 				if (err) throw err;
 				if(rows.length < 1){
 					//Inser user
-					sql = `INSERT INTO user(id, bday) VALUES ('${message.author.id}', '${args[0]}')`;
+					sql = `INSERT INTO user(id, bday) VALUES ("${message.author.id}", '${args[0]}')`;
 					con.query(sql, function (err, rows) {
 						if (err) throw err;
 						message.channel.send(`Thank you <@${message.author.id}> your birthday is now saved :smiley: !`);
 					});
 					//Update user with server 
-					con.query(`SELECT * FROM bday WHERE id_user='${message.author.id}' AND id_server='${message.guild.id}'`, function (err, checks) {
+					con.query(`SELECT * FROM bday WHERE id_user="${message.author.id}" AND id_server="${message.guild.id}"`, function (err, checks) {
 						if (err) throw err;
 						if(checks.length < 1){
-							con.query(`INSERT INTO bday VALUES ('${message.author.id}', '${message.guild.id}')`, function (err, rows) {
+							con.query(`INSERT INTO bday VALUES ("${message.author.id}", "${message.guild.id}")`, function (err, rows) {
 								if (err) throw err;
 							});
 						}
@@ -286,16 +286,16 @@ client.on("message", async message => {
 
 				}else{
 					//Update user
-					sql = `UPDATE user SET bday='${args[0]}' WHERE id='${message.author.id}'`;
+					sql = `UPDATE user SET bday="${args[0]}" WHERE id='${message.author.id}'`;
 					con.query(sql, function (err, rows) {
 						if (err) throw err;
 						message.channel.send(`<@${message.author.id}> your birthday is updated now :smiley: !`);
 					});
 					//Update user with server 
-					con.query(`SELECT * FROM bday WHERE id_user='${message.author.id}' AND id_server='${message.guild.id}'`, function (err, checks) {
+					con.query(`SELECT * FROM bday WHERE id_user="${message.author.id}" AND id_server="${message.guild.id}"`, function (err, checks) {
 						if (err) throw err;
 						if(checks.length < 1){
-							con.query(`INSERT INTO bday VALUES ('${message.author.id}', '${message.guild.id}')`, function (err, rows) {
+							con.query(`INSERT INTO bday VALUES ("${message.author.id}", "${message.guild.id}")`, function (err, rows) {
 								if (err) throw err;
 							});
 						}
@@ -303,7 +303,7 @@ client.on("message", async message => {
 					
 				}
 			});
-			con.query(`INSERT IGNORE INTO data_user(id, name, bday, joined) VALUES('${message.author.id}', '${message.author.username}', '${args[0]}', CURDATE())`, function (err, rows) {
+			con.query(`INSERT IGNORE INTO data_user(id, name, bday, joined) VALUES("${message.author.id}", "${message.author.username}", "${args[0]}", CURDATE())`, function (err, rows) {
 				if (err) throw err;
 			});
 		}else{
@@ -377,13 +377,13 @@ client.on("message", async message => {
 						if (err) throw err;
 						if(rows.length < 1){
 							//Insert if not exist
-							con.query(`INSERT INTO custom_event(name, date, id_server) VALUES('${the_name}', '2000-${the_date}', '${message.guild.id}')`, function (err, rows) {
+							con.query(`INSERT INTO custom_event(name, date, id_server) VALUES("${the_name}", '2000-${the_date}', "${message.guild.id}")`, function (err, rows) {
 								if (err) throw err;
 								message.channel.send("Your event has been saved :thumbsup:");
 							});
 						}else{
 							//Update if exist
-							con.query(`UPDATE custom_event SET name='${the_name}' WHERE id_server='${message.guild.id}' AND DAY(date)='${dats[1]}' AND MONTH(date)='${dats[0]}'`, function (err, rows) {
+							con.query(`UPDATE custom_event SET name="${the_name}" WHERE id_server="${message.guild.id}" AND DAY(date)='${dats[1]}' AND MONTH(date)='${dats[0]}'`, function (err, rows) {
 								if (err) throw err;
 								message.channel.send("Your event has been updated :thumbsup:");
 							});
@@ -405,7 +405,7 @@ client.on("message", async message => {
 		if(message.member.roles.find("name", "CakeBotModo")){
 			if(args.length >= 1){
 				the_name = args.join(" ");
-				con.query(`DELETE FROM custom_event WHERE name='${the_name}' AND id_server=${message.guild.id}`, function (err, rows) {
+				con.query(`DELETE FROM custom_event WHERE name="${the_name}" AND id_server=${message.guild.id}`, function (err, rows) {
 					if (err) throw err;
 					message.channel.send(`Your event ${the_name} has been removed :thumbsup:`);
 				});

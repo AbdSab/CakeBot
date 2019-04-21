@@ -1,4 +1,4 @@
-{ "token"  : "",
+{ "token"  : "NDU1Mzk4Mzc2NTcwMjI0NjQx.XLuBRg.wqq6tZxZXcQP3IWfZvPbgyuZhps",
   "prefix" : "!cake",
   "cmd":{
     "show_birthdays":"bdays",
@@ -13,10 +13,11 @@
     "help":"help"
   },
   "db":{
-    "host":"localhost",
-    "user":"root",
-    "pass":"",
-    "database":"bday"
+    "host":"remotemysql.com",
+    "user":"uar7uSjiUZ",
+    "pass":"XWtjwGaPPd",
+    "database":"uar7uSjiUZ",
+    "port": "3306"
   },
   "other":{
     "url":"https://discord.js.org/#/docs/main/indev/class/RichEmbed",
